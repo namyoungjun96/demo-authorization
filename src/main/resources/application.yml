@@ -2,5 +2,11 @@ spring:
   profiles:
     include: oauth
 
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://54.163.14.242:3306/demo
+    username: jun
+    password: jun1234
+
 server:
   port: 6060

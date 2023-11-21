@@ -4,9 +4,9 @@ spring:
       client:
         registration:
           naver:
-            client-id: {client-id}
-            client-secret: {client-secret}
-            redirect-uri: "http://localhost:8080/login/oauth2/code/naver"
+            client-id: uCoS8KzKduaXBhiQWA35
+            client-secret: QO_zFeyOfy
+            redirect-uri: "http://54.163.14.242:8080/login/oauth2/code/naver"
             authorization-grant-type: authorization_code
             scope: name, email, profile_image
             client-name: Naver

@@ -1,16 +1,16 @@
 package demo.auth.server.oauth;
 
-import demo.auth.server.dto.domain.TestUser;
+import demo.auth.server.dto.domain.DemoUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 public class CustomDetails implements UserDetails {
-    private final TestUser testUser;
+    private final DemoUser demoUser;
 
-    public CustomDetails(TestUser testUser) {
-        this.testUser = testUser;
+    public CustomDetails(DemoUser demoUser) {
+        this.demoUser = demoUser;
     }
 
     // 해당 유저의 권한을 리턴
@@ -21,13 +21,13 @@ public class CustomDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return testUser.getPassword();
+        return demoUser.getPassword();
     }
 
     // Id
     @Override
     public String getUsername() {
-        return testUser.getId();
+        return demoUser.getId();
     }
 
     //    계정이 만료되지 않았는지 리턴 (true: 만료안됨)
