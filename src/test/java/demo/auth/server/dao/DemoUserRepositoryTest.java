@@ -1,4 +1,4 @@
-package demo.auth.server.controller.dao;
+package demo.auth.server.dao;
 
 import demo.auth.server.dao.DemoUserRepository;
 import demo.auth.server.dto.domain.DemoUser;
