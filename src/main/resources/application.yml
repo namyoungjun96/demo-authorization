@@ -3,10 +3,15 @@ spring:
     include: oauth
 
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://54.163.14.242:3306/demo
-    username: jun
-    password: jun1234
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/demo
+    username: postgres
+    password: 1234
 
 server:
-  port: 6060
+  port: 8080
+
+logging:
+  level:
+    org.springframework.security: TRACE
+    root: debug

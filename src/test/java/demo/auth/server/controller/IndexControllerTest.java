@@ -20,14 +20,14 @@ class IndexControllerTest {
     @DisplayName("returnFailIsSuccess")
     @Test
     void index() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:6060/"))
+        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
     @DisplayName("securityApplySuccess")
     @Test
     void test() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:6060/test"))
+        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/login/oauth2/code/naver"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("success!"));
     }
