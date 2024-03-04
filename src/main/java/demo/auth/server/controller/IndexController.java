@@ -19,8 +19,7 @@ public class IndexController {
     }
 
     @GetMapping("/login/oauth2/code/naver")
-    public String loginSuccessCallback(@RequestParam("code") String code,
-                                       @RequestParam("state") String state) {
+    public String loginSuccessCallback() {
         return "success!";
     }
 
