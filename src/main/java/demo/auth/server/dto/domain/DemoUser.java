@@ -2,20 +2,18 @@ package demo.auth.server.dto.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity(name = "person")
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of ={"id, "})
 public class DemoUser {
     @Id
     @Column(name = "p_id")
@@ -24,6 +22,11 @@ public class DemoUser {
     private String password;
     @Column(name = "p_name")
     private String name;
-    @Column(name = "p_email")
+    @Column(name = "p_email", unique = true)
     private String email;
+    @Column(name = "auth_type")
+    private String authType;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRole role;
 }

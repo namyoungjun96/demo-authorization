@@ -37,10 +37,10 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         DemoUser demoUser = oauth2UserService.getUserByEmailAndOauthType(email, oauthType);
         log.info("User Saved In Session");
-        HttpSession session = request.getSession();
-        session.setAttribute("user", demoUser);
+//        HttpSession session = request.getSession();
+//        session.setAttribute("user", demoUser);
 
-        response.sendRedirect("/test");
+//        response.sendRedirect("/login/oauth2/code/" + oauthType);
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }
