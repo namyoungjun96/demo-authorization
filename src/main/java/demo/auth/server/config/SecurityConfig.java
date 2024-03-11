@@ -50,17 +50,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(request -> request.requestMatchers("/test").permitAll().anyRequest().authenticated())
-                .oauth2Login(oauth2 -> oauth2.clientRegistrationRepository(clientRegistrationRepository())
-                                .userInfoEndpoint(userInfo -> userInfo
+                .authorizeHttpRequests(request -> request.requestMatchers("/token", "/oauth2/**").permitAll().anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo
                                                 .userService(oauth2UserService)
 //                                .userAuthoritiesMapper(this.userAuthoritiesMapper())
 //                                .oidcUserService(this.oidcUserService())
                                 )
                                 .successHandler(oAuthLoginSuccessHandler)
+                                .authorizationEndpoint(endPoint -> endPoint.baseUri("/oauth2/authorize"))
+//                                .redirectionEndpoint(endPoint -> endPoint.baseUri("/token"))
+//                                .redirectionEndpoint(endPoint -> endPoint.baseUri("/oauth2/code/*"))
                 );
 
         return http.build();

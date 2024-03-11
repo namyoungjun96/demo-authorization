@@ -1,5 +1,7 @@
 package demo.auth.server.oauth;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import demo.auth.server.dto.domain.DemoUser;
@@ -15,8 +17,10 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -25,6 +29,8 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     private final Oauth2UserService oauth2UserService;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
+    public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
@@ -32,7 +38,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String email = null;
         String oauthType = token.getAuthorizedClientRegistrationId();
 
-        if("naver".equals(oauthType.toLowerCase())) {
+        if ("naver".equals(oauthType.toLowerCase())) {
             email = ((Map<String, Object>) token.getPrincipal().getAttribute("response")).get("email").toString();
         }
 
@@ -42,12 +48,52 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
 
         var oAuth2AuthorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient("naver", authentication.getName());
-        log.debug("access token log: {}", oAuth2AuthorizedClient.getAccessToken());
-        response.addCookie(new Cookie("accessTokenHeader", oAuth2AuthorizedClient.getAccessToken().getTokenValue()));
 //        log.info("User Saved In Session");
 //        HttpSession session = request.getSession();
 //        session.setAttribute("user", demoUser);
 
+        String targetUrl = determineTargetUrl(request, response, authentication);
+
+//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+//        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/accessToken=" + oAuth2AuthorizedClient.getAccessToken().getTokenValue());
+        response.sendRedirect(targetUrl);
         super.onAuthenticationSuccess(request, response, authentication);
+    }
+
+    @Override
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) {
+
+        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+                .map(Cookie::getValue);
+
+        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+
+//        OAuth2UserPrincipal principal = getOAuth2UserPrincipal(authentication);
+//
+//        if (principal == null) {
+//            return UriComponentsBuilder.fromUriString(targetUrl)
+//                    .queryParam("error", "Login failed")
+//                    .build().toUriString();
+//        }
+
+        // TODO: DB 저장
+        // TODO: 액세스 토큰, 리프레시 토큰 발급
+        // TODO: 리프레시 토큰 DB 저장
+//        log.info("email={}, name={}, nickname={}, accessToken={}", principal.getUserInfo().getEmail(),
+//                principal.getUserInfo().getName(),
+//                principal.getUserInfo().getNickname(),
+//                principal.getUserInfo().getAccessToken()
+//        );
+
+        var oAuth2AuthorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient("naver", authentication.getName());
+        String accessToken = oAuth2AuthorizedClient.getAccessToken().getTokenValue();
+        String refreshToken = oAuth2AuthorizedClient.getRefreshToken().getTokenValue();
+
+        return UriComponentsBuilder.newInstance()
+                .host("localhost:3000")
+                .queryParam("access_token", accessToken)
+                .queryParam("refresh_token", !refreshToken.isEmpty() ? refreshToken : "null")
+                .build().toUriString();
     }
 }

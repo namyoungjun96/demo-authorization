@@ -6,11 +6,11 @@ spring:
           naver:
             client-id: uCoS8KzKduaXBhiQWA35
             client-secret: QO_zFeyOfy
-            redirect-uri: "http://localhost:8080/login/oauth2/code/naver"
+            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
             scope: name, email
             client-name: Naver
-            # redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            # redirect-uri: "http://localhost:8080/login/oauth2/code/naver"
 
 #          google:
 #            client-id: {client-id}
