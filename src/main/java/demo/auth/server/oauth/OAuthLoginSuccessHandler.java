@@ -44,18 +44,15 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         log.info("Login Success!: {} from {}", email, oauthType);
 
-        DemoUser demoUser = oauth2UserService.getUserByEmailAndOauthType(email, oauthType);
+//        DemoUser demoUser = oauth2UserService.getUserByEmailAndOauthType(email, oauthType);
 
 
-        var oAuth2AuthorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient("naver", authentication.getName());
+//        var oAuth2AuthorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient("naver", authentication.getName());
 //        log.info("User Saved In Session");
 //        HttpSession session = request.getSession();
 //        session.setAttribute("user", demoUser);
 
         String targetUrl = determineTargetUrl(request, response, authentication);
-
-//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
-//        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/accessToken=" + oAuth2AuthorizedClient.getAccessToken().getTokenValue());
         response.sendRedirect(targetUrl);
         super.onAuthenticationSuccess(request, response, authentication);
     }
@@ -76,15 +73,6 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 //                    .queryParam("error", "Login failed")
 //                    .build().toUriString();
 //        }
-
-        // TODO: DB 저장
-        // TODO: 액세스 토큰, 리프레시 토큰 발급
-        // TODO: 리프레시 토큰 DB 저장
-//        log.info("email={}, name={}, nickname={}, accessToken={}", principal.getUserInfo().getEmail(),
-//                principal.getUserInfo().getName(),
-//                principal.getUserInfo().getNickname(),
-//                principal.getUserInfo().getAccessToken()
-//        );
 
         var oAuth2AuthorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient("naver", authentication.getName());
         String accessToken = oAuth2AuthorizedClient.getAccessToken().getTokenValue();

@@ -20,6 +20,12 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.debug("oAuth2User = {}" , oAuth2User.getAttributes());
+
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String accessToken = userRequest.getAccessToken().getTokenValue();
+
+//        if (OAuth2Provider.NAVER.getRegistrationId().equals(registrationId)) {
+//            return new NaverUserInfo(accessToken, oAuth2User.getAttributes());
         return super.loadUser(userRequest);
     }
 
